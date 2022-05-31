@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Administration des utilisateurs
+{% endblock %}
+
+{% block body %}
+	<h1>Administration des utilisateurs</h1>
+
+
+	{% for user in users %}
+		<div class="container">
+			<div class="card border-primary mb-3" style="max-width: 20rem;">
+				<div class="card-header">Utilisateurs</div>
+				<div class="card-body">
+					<h4 class="card-title">{{ user.lastname}}
+						{{ user.firstname}}
+					</h4>
+					<p class="card-text">{{ user.address}}
+						{{ user.zipcode}}
+						{{ user.city}}
+					</p>
+					<p>{{ user.email}}</p>
+				</div>
+			</div>
+		{% endfor %}
+
+	{% endblock %}
