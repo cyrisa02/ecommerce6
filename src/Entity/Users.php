@@ -11,12 +11,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ */
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un comte avec cet email')]
 class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use CreatedAtTrait;
-
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -46,17 +48,11 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 150)]
     private $city;
 
-    #[ORM\Column(type: 'datetime_immutable', options: ['defautl' =>
-    'CURRENT_TIMESTAMP'])]
-    private $created_at;
+    #[ORM\Column(type: 'boolean')]
+    private $is_verified = false;
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Orders::class)]
     private $orders;
-
-    /**
- 	*This constructor is for the date and for the list of orders
- 	*/
- 	
 
     public function __construct()
     {
@@ -194,10 +190,20 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    
+    public function getIsVerified(): ?bool
+    {
+        return $this->is_verified;
+    }
+
+    public function setIsVerified(bool $is_verified): self
+    {
+        $this->is_verified = $is_verified;
+
+        return $this;
+    }
 
     /**
-     * @return Collection<int, Orders>
+     * @return Collection|Orders[]
      */
     public function getOrders(): Collection
     {
